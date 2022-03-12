@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var stop func() error
+
 // Handler returns an http handler that takes an optional "seconds" query
 // argument that defaults to "30" and produces a profile over this duration.
 // The optional "format" parameter controls if the output is written in
@@ -31,5 +33,20 @@ func Handler() http.Handler {
 		stop := Start(w, format)
 		defer stop()
 		time.Sleep(time.Duration(seconds) * time.Second)
+	})
+}
+
+func StartHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		stop = StartSampling()
+	})
+}
+
+func StopHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if stop != nil {
+			stop()
+			stop = nil
+		}
 	})
 }

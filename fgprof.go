@@ -4,7 +4,11 @@
 package fgprof
 
 import (
+	"bufio"
+	"fmt"
 	"io"
+	"log"
+	"os"
 	"runtime"
 	"strings"
 	"time"
@@ -40,6 +44,39 @@ func Start(w io.Writer, format Format) func() error {
 	return func() error {
 		stopCh <- struct{}{}
 		return writeFormat(w, stackCounts.HumanMap(prof.SelfFrame()), format, hz)
+	}
+}
+
+func StartSampling() func() error {
+	const hz = 99
+	ticker := time.NewTicker(time.Second / hz)
+	stopCh := make(chan struct{})
+
+	buf := make([]byte, 1e5)
+	name := fmt.Sprintf("%d.trace", time.Now().UnixMicro())
+	f, err := os.Create(name)
+	if err != nil {
+		log.Fatalf("Failed to create file %s", name)
+	}
+	w := bufio.NewWriter(f)
+
+	go func() {
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-ticker.C:
+				runtime.Stack(buf, true)
+				w.Write(buf)
+			case <-stopCh:
+				return
+			}
+		}
+	}()
+
+	return func() error {
+		stopCh <- struct{}{}
+		return nil
 	}
 }
 
