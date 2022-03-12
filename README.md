@@ -23,7 +23,7 @@ package main
 
 import(
 	_ "net/http/pprof"
-	"github.com/felixge/fgprof"
+	"github.com/All-less/fgprof"
 )
 
 func main() {
@@ -146,7 +146,7 @@ So what can we do? Let's try fgprof, which is designed to analyze mixed I/O and 
 ```go
 import(
 	_ "net/http/pprof"
-	"github.com/felixge/fgprof"
+	"github.com/All-less/fgprof"
 )
 
 func main() {

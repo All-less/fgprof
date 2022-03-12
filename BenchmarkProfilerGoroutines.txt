@@ -1,7 +1,7 @@
 $ go test -bench=BenchmarkProfilerGoroutines
 goos: darwin
 goarch: amd64
-pkg: github.com/felixge/fgprof
+pkg: github.com/All-less/fgprof
 BenchmarkProfilerGoroutines/1_goroutines-8         	  43431	    26860 ns/op
 BenchmarkProfilerGoroutines/2_goroutines-8         	  42590	    27648 ns/op
 BenchmarkProfilerGoroutines/4_goroutines-8         	  40725	    28694 ns/op
