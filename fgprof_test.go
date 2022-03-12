@@ -25,6 +25,14 @@ func TestStart(t *testing.T) {
 	}
 }
 
+func TestStartSample(t *testing.T) {
+	stop := StartSampling()
+	time.Sleep(100 * time.Millisecond)
+	if err := stop(); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func BenchmarkProfiler(b *testing.B) {
 	prof := &profiler{}
 	for i := 0; i < b.N; i++ {

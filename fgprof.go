@@ -66,8 +66,9 @@ func StartSampling() func() error {
 		for {
 			select {
 			case <-ticker.C:
-				runtime.Stack(buf, true)
-				w.Write(buf)
+				n := runtime.Stack(buf, true)
+				w.Write(buf[:n])
+				w.Write([]byte("\n---\n"))
 			case <-stopCh:
 				return
 			}
