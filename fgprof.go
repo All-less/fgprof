@@ -67,8 +67,10 @@ func StartSampling() func() error {
 			select {
 			case <-ticker.C:
 				n := runtime.Stack(buf, true)
+				now := time.Now()
+				delim := fmt.Sprintf("\n--- %d %s\n", now.UnixNano(), now.String())
+				w.Write([]byte(delim))
 				w.Write(buf[:n])
-				w.Write([]byte("\n---\n"))
 			case <-stopCh:
 				return
 			}
